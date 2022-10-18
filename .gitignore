@@ -67,3 +67,4 @@ public/js/
 
 
 config/database.yml
+.DS_Store

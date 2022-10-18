@@ -10,22 +10,21 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_04_26_171720) do
-
+ActiveRecord::Schema[7.0].define(version: 2022_04_26_171720) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "achievements", force: :cascade do |t|
     t.string "name"
     t.string "emoji"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "games", force: :cascade do |t|
     t.integer "created_by_id"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.text "status", default: "draft", null: false
     t.bigint "season_id"
     t.index ["season_id"], name: "index_games_on_season_id"
@@ -36,8 +35,8 @@ ActiveRecord::Schema.define(version: 2022_04_26_171720) do
     t.bigint "game_id"
     t.bigint "player_id"
     t.integer "score"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.integer "elo_diff"
     t.float "odd"
     t.float "elo", default: 0.0
@@ -51,8 +50,8 @@ ActiveRecord::Schema.define(version: 2022_04_26_171720) do
     t.integer "value"
     t.float "price"
     t.boolean "active"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "players", force: :cascade do |t|
@@ -61,14 +60,14 @@ ActiveRecord::Schema.define(version: 2022_04_26_171720) do
     t.integer "highest_elo"
     t.integer "lowest_elo"
     t.text "small_avatar_url"
-    t.datetime "small_avatar_url_last_set_at"
+    t.datetime "small_avatar_url_last_set_at", precision: nil
     t.text "display_name"
-    t.datetime "display_name_last_set_at"
+    t.datetime "display_name_last_set_at", precision: nil
     t.boolean "active", default: true
     t.float "money", default: 50.0
     t.text "medium_avatar_url"
-    t.datetime "medium_avatar_url_last_set_at"
-    t.datetime "last_free_money_added_at"
+    t.datetime "medium_avatar_url_last_set_at", precision: nil
+    t.datetime "last_free_money_added_at", precision: nil
     t.bigint "user_id"
     t.text "real_name"
     t.integer "private_elo", default: 1000
@@ -79,8 +78,8 @@ ActiveRecord::Schema.define(version: 2022_04_26_171720) do
   create_table "players_achievements", force: :cascade do |t|
     t.bigint "achievement_id"
     t.bigint "player_id"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.bigint "season_id"
     t.index ["achievement_id"], name: "index_players_achievements_on_achievement_id"
     t.index ["player_id"], name: "index_players_achievements_on_player_id"
@@ -90,31 +89,31 @@ ActiveRecord::Schema.define(version: 2022_04_26_171720) do
   create_table "players_money_options", force: :cascade do |t|
     t.bigint "player_id"
     t.bigint "money_option_id"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.index ["money_option_id"], name: "index_players_money_options_on_money_option_id"
     t.index ["player_id"], name: "index_players_money_options_on_player_id"
   end
 
   create_table "seasons", force: :cascade do |t|
     t.boolean "is_current", default: false
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "users", force: :cascade do |t|
     t.string "email"
     t.string "name"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "votes", force: :cascade do |t|
     t.bigint "games_players_id"
     t.bigint "game_id"
     t.integer "voted_by_id"
-    t.datetime "created_at", precision: 6, null: false
-    t.datetime "updated_at", precision: 6, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.boolean "correct", default: false
     t.float "bet"
     t.index ["game_id"], name: "index_votes_on_game_id"
