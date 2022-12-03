@@ -6,9 +6,21 @@
     "bot_user": {
       "display_name": "mariokart-ranking",
       "always_online": true
-    }
+    },
+    "slash_commands": [
+      {
+        "command": "/mario",
+        "url": "https://mariokart-slack.gogaz.org/",
+        "description": "Mario kart ranking",
+        "usage_hint": "new rank stats rematch help",
+        "should_escape": true
+      }
+    ]
   },
   "oauth_config": {
+    "redirect_urls": [
+      "https://mariokart-slack.gogaz.org/"
+    ],
     "scopes": {
       "bot": [
         "app_mentions:read",
@@ -24,6 +36,10 @@
     }
   },
   "settings": {
+    "interactivity": {
+      "is_enabled": true,
+      "request_url": "https://mariokart-slack.gogaz.org/actions"
+    },
     "org_deploy_enabled": false,
     "socket_mode_enabled": false,
     "token_rotation_enabled": false

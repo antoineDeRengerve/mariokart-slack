@@ -2,7 +2,7 @@ class App < Sinatra::Base
   register Sinatra::ActiveRecordExtension
 
   use Rack::JSONBodyParser
-  
+
   set :root,  File.dirname(__FILE__)
   set :views, Proc.new { File.join(root, 'app', 'views') }
   set :public_folder, 'public'
@@ -44,9 +44,9 @@ class App < Sinatra::Base
     response_ok_with_body(result)
   end
 
-  # Slack 
+  # Slack
   post '/' do
-    return unless params[:token] == ENV['SLACK_TOKEN']
+    next unless params[:token] == ENV['SLACK_TOKEN']
 
     if ENV['UNDER_DEV'] == 'true'
       Slack::Client.post_message(text: ":robot_face: Someone is working on me! :robot_face:")
@@ -71,7 +71,7 @@ class App < Sinatra::Base
     open_id = Lib::OpenId.new('https://slack.com', ENV['SLACK_CLIENT_ID'], ENV['LOGIN_REDIRECT_URL'])
     nonce = SecureRandom.base64
     session[:nonce] = nonce
-    
+
     redirect_link = open_id.auth_uri(nonce)
     redirect redirect_link
   end
@@ -79,6 +79,8 @@ class App < Sinatra::Base
   get '/connect' do
     code = params[:code]
     nonce = session[:nonce]
+    next redirect '/login' unless code || nonce
+
     open_id = Lib::OpenId.new('https://slack.com', ENV['SLACK_CLIENT_ID'], ENV['LOGIN_REDIRECT_URL'])
     user_info = open_id.redirect(code, nonce)
 
@@ -91,7 +93,7 @@ class App < Sinatra::Base
     redirect '/login-success'
   end
 
-  private 
+  private
 
   def load_current_user
     user_id = session[:user_id]
