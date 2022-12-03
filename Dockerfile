@@ -30,8 +30,6 @@ RUN gem install bundler
 
 ADD Gemfile* /code/
 ADD Rakefile /code/
-ADD config.ru /code/
-ADD app.rb /code/
 
 RUN bundle install
 

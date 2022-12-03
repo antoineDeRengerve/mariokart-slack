@@ -20,6 +20,7 @@ gem 'zeitwerk'
 gem 'openid_connect'
 gem 'irb', require: false
 gem 'activerecord', '>= 7'
+gem 'faraday', '~> 1.8.0'
 
 group :test do
   gem 'rack-test'

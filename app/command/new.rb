@@ -27,7 +27,6 @@ module Command
     def post_game_ongoing_message
       game = Game.draft.last
       blocks = ongoing_blocks(game)
-      puts blocks
       Slack::Client.post_message(blocks: blocks)
       response_ok_basic
     end

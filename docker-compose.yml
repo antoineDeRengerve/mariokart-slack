@@ -3,6 +3,7 @@ version: '3'
 services:
   postgres:
     image: postgres:latest
+    container_name: db
     volumes:
       - postgres:/var/lib/postgresql/data
     environment:
@@ -23,6 +24,9 @@ services:
       - ./config:/code/config
       - ./db:/code/db
       - ./public:/code/public
+      - ./app.rb:/code/app.rb
+      - ./config.ru:/code/config.ru
+      - ./console.rb:/code/console.rb
     ports:
       - "3001:3001"
     restart: always
@@ -30,6 +34,12 @@ services:
       - DATABASE_URL
       - RAILS_ENV
       - SLACK_TOKEN
+      - CHANNEL_ID
+      - SESSION_SECRET
+      - SLACK_CLIENT_ID
+      - SLACK_CLIENT_SECRET
+      - LOGIN_REDIRECT_URL
+      - BOT_ACCESS_TOKEN
     command: bash -c "source /usr/local/rvm/scripts/rvm && bundle exec rackup config.ru -p 3001 -o 0.0.0.0"
     depends_on:
       - postgres
