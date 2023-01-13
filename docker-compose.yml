@@ -27,20 +27,15 @@ services:
       - ./app.rb:/code/app.rb
       - ./config.ru:/code/config.ru
       - ./console.rb:/code/console.rb
+      - ./Rakefile:/code/Rakefile
+      - ./schedule.cron:/etc/cron.d/schedule
+      - ./supervisord.conf:/etc/supervisor/supervisord.conf
+      - ./.env:/code/.env
     ports:
       - "3001:3001"
     restart: always
     environment:
-      - DATABASE_URL
-      - RAILS_ENV
-      - SLACK_TOKEN
-      - CHANNEL_ID
-      - SESSION_SECRET
-      - SLACK_CLIENT_ID
-      - SLACK_CLIENT_SECRET
-      - LOGIN_REDIRECT_URL
-      - BOT_ACCESS_TOKEN
-    command: bash -c "source /usr/local/rvm/scripts/rvm && bundle exec rackup config.ru -p 3001 -o 0.0.0.0"
+      - TZ
     depends_on:
       - postgres
 

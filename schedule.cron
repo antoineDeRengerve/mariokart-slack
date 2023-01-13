@@ -1,0 +1,6 @@
+#m  h  dom mth  dow
+0   14  *   *   1-5 root bash -c "cd /code && source /usr/local/rvm/scripts/rvm && rake display_rank_in_channel"
+0   0   *   *   1   root bash -c "cd /code && source /usr/local/rvm/scripts/rvm && rake set_inactive_players"
+0   9   1   */4 *   root bash -c "cd /code && source /usr/local/rvm/scripts/rvm && rake new_season"
+0   9   *   *   1-5 root bash -c "cd /code && source /usr/local/rvm/scripts/rvm && rake update_players"
+

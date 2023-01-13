@@ -29,7 +29,6 @@ RUN gem update --system
 RUN gem install bundler
 
 ADD Gemfile* /code/
-ADD Rakefile /code/
 
 RUN bundle install
 
@@ -48,3 +47,8 @@ ADD package.json /code/
 ADD webpack.config.js /code/
 ADD yarn.lock /code/
 RUN yarn install
+
+# Scheduling
+RUN apt -y install cron supervisor
+
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/supervisord.conf"]
