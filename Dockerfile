@@ -1,4 +1,4 @@
-FROM debian:stable
+FROM --platform=linux/amd64 debian:stable
 
 ENV BUNDLER_VERSION 2.2.7
 
@@ -14,7 +14,7 @@ RUN apt -y install git curl autoconf bison build-essential libssl-dev libyaml-de
 
 # Ruby and rvm
 RUN \curl -sSL https://get.rvm.io | bash
-RUN usermod -a -G rvm root 
+RUN usermod -a -G rvm root
 RUN apt -y install rubygems ruby-dev
 
 # bundler and gems
