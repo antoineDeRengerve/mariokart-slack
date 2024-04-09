@@ -20,6 +20,9 @@ RUN cd /root/openssl-1.1.1g && make && (make test || true) && make install
 
 RUN RUBY_CONFIGURE_OPTS=--with-openssl-dir=$HOME/.openssl/openssl-1.1.1g rbenv install 2.7.6
 
+# Dummy to avoid cache issue with wrong code from github
+RUN touch foo
+
 RUN git clone https://github.com/antoineDeRengerve/mariokart-slack.git code
 
 WORKDIR /code
@@ -28,19 +31,20 @@ RUN bundle update
 RUN bundle install
 
 # # JS requirements
-# RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.2/install.sh | bash
-# RUN nvm install 14
-# RUN nvm use 14
-# RUN npm install --global yarn
-# ADD package.json /code/
-# ADD webpack.config.js /code/
-# ADD yarn.lock /code/
-# RUN yarn install
+RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.2/install.sh | bash
+RUN nvm install 14
+RUN nvm use 14
+RUN npm install --global yarn
+RUN yarn install
 
 
 # # Clean up
-# RUN apt -y remove --purge git autoconf bison build-essential libssl-dev
-# RUN apt -y autoremove
-# RUN apt clean
-#
-# CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/supervisord.conf"]
+RUN apt -y remove --purge git autoconf bison build-essential libssl-dev
+# RUN apt -y autoremove - remove libpq-dev when it is needed...
+RUN apt clean
+
+ADD schedule.cron /etc/cron.d/schedule
+ADD supervisord.conf /etc/supervisor/supervisord.conf
+ADD .bash_profile /root/
+
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/supervisord.conf"]
