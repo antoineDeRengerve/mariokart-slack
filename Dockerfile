@@ -3,52 +3,44 @@ FROM --platform=linux/amd64 debian:stable
 ENV BUNDLER_VERSION 2.2.7
 
 SHELL ["/bin/bash", "-l", "-c"]
-RUN touch /root/.bashrc
-
-WORKDIR /code
+ADD .bashrc /root/
 
 RUN apt -y update && apt -y upgrade
 
 # Install required libs
-RUN apt -y install git curl autoconf bison build-essential libssl-dev libyaml-dev libreadline6-dev zlib1g-dev libncurses5-dev libffi-dev libpq-dev procps
+RUN apt -y install git curl autoconf bison build-essential libssl-dev libyaml-dev libreadline6-dev \
+  zlib1g-dev libncurses5-dev libffi-dev libpq-dev procps wget rbenv cron supervisor
 
-# Ruby and rvm
-RUN \curl -sSL https://get.rvm.io | bash
-RUN usermod -a -G rvm root
-RUN apt -y install rubygems ruby-dev
+# Copy and extract tar.gz
+# Source: https://www.openssl.org/source/openssl-1.1.1g.tar.gz
+ADD openssl-1.1.1g.tar.gz /root/
+RUN cd /root/openssl-1.1.1g && ./config --prefix=$HOME/.openssl/openssl-1.1.1g --openssldir=$HOME/.openssl/openssl-1.1.1g
+# A couple of tests may failed. Do not want to make it a blocker
+RUN cd /root/openssl-1.1.1g && make && (make test || true) && make install
 
-# bundler and gems
+RUN RUBY_CONFIGURE_OPTS=--with-openssl-dir=$HOME/.openssl/openssl-1.1.1g rbenv install 2.7.6
 
-ADD .ruby-version /code/
+RUN git clone https://github.com/antoineDeRengerve/mariokart-slack.git code
 
-RUN echo "source /usr/local/rvm/scripts/rvm" >> ~/.bashrc
+WORKDIR /code
 
-RUN rvm install "ruby-$(cat .ruby-version)"
-RUN rvm use --default $(cat .ruby-version)
-RUN gem update --system
-RUN gem install bundler
-
-ADD Gemfile* /code/
-
+RUN bundle update
 RUN bundle install
 
-# Clean up
-RUN apt -y remove --purge git autoconf bison build-essential libssl-dev
-RUN apt -y autoremove
-RUN apt clean
+# # JS requirements
+# RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.2/install.sh | bash
+# RUN nvm install 14
+# RUN nvm use 14
+# RUN npm install --global yarn
+# ADD package.json /code/
+# ADD webpack.config.js /code/
+# ADD yarn.lock /code/
+# RUN yarn install
 
 
-# JS requirements
-RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.2/install.sh | bash
-RUN nvm install 14
-RUN nvm use 14
-RUN npm install --global yarn
-ADD package.json /code/
-ADD webpack.config.js /code/
-ADD yarn.lock /code/
-RUN yarn install
-
-# Scheduling
-RUN apt -y install cron supervisor
-
-CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/supervisord.conf"]
+# # Clean up
+# RUN apt -y remove --purge git autoconf bison build-essential libssl-dev
+# RUN apt -y autoremove
+# RUN apt clean
+#
+# CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/supervisord.conf"]
