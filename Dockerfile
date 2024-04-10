@@ -20,9 +20,6 @@ RUN cd /root/openssl-1.1.1g && make && (make test || true) && make install
 
 RUN RUBY_CONFIGURE_OPTS=--with-openssl-dir=$HOME/.openssl/openssl-1.1.1g rbenv install 2.7.6
 
-# Dummy to avoid cache issue with wrong code from github
-RUN touch foo
-
 RUN git clone https://github.com/antoineDeRengerve/mariokart-slack.git code
 
 WORKDIR /code
@@ -46,5 +43,9 @@ RUN apt clean
 ADD schedule.cron /etc/cron.d/schedule
 ADD supervisord.conf /etc/supervisor/supervisord.conf
 ADD .bash_profile /root/
+
+LABEL org.opencontainers.image.source=https://github.com/antoineDeRengerve/mariokart-slack
+LABEL org.opencontainers.image.description="Mariokart ELO container"
+LABEL org.opencontainers.image.licenses=MIT
 
 CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/supervisord.conf"]
